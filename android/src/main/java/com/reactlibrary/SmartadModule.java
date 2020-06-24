@@ -70,9 +70,9 @@ public class SmartadModule extends ReactContextBaseJavaModule {
             public void run() {
                 SASConfiguration.getSharedInstance().configure(reactContext, SITE_ID, "https://mobile.smartadserver.com");
                 mInterstitialPlacement = new SASAdPlacement(SITE_ID, PAGE_ID, FORMAT_ID, TARGET);
-                mInterstitialManager = new SASInterstitialManager(reactContext, mInterstitialPlacement);
+                this.mInterstitialManager = new SASInterstitialManager(reactContext, mInterstitialPlacement);
                 initInterstitialListener();
-                mInterstitialManager.setInterstitialListener(mInterstitialListener);
+                this.mInterstitialManager.setInterstitialListener(mInterstitialListener);
             }
         });
     }
@@ -80,7 +80,7 @@ public class SmartadModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void loadInterstitialAd() {
         if (mInterstitialManager != null) {
-            mInterstitialManager.loadInterstitialAd();
+            this.mInterstitialManager.loadInterstitialAd();
         } else {
             sendEvent("smartInterstitialFailedToLoad", null);
         }
@@ -89,7 +89,7 @@ public class SmartadModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void showInterstitialAd() {
         if (mInterstitialManager != null && mInterstitialManager.getAdStatus() == SASAdStatus.READY) {
-            mInterstitialManager.showInterstitialAd();
+            this.mInterstitialManager.showInterstitialAd();
         } else {
             Log.e(SmartadModule.TAG, "Interstitial is not ready for the current placement.");
             sendEvent("smartInterstitialNotReady", null);
@@ -146,12 +146,12 @@ public class SmartadModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     protected void reset() {
-        mInterstitialManager.reset();
+        this.mInterstitialManager.reset();
     }
 
     @ReactMethod
     protected void onDestroy() {
-        mInterstitialManager.onDestroy();
+       this. mInterstitialManager.onDestroy();
     }
 
     private void sendEvent(String eventName, @Nullable WritableMap params) {

@@ -11,13 +11,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.smartadserver.android.library.model.SASReward;
-import com.smartadserver.android.library.model.SASAdStatus;
 import com.smartadserver.android.library.model.SASAdElement;
 import com.smartadserver.android.library.model.SASAdPlacement;
-import com.smartadserver.android.library.model.SASNativeVideoAdElement;
+import com.smartadserver.android.library.model.SASAdStatus;
+import com.smartadserver.android.library.ui.SASInterstitialManager;
 import com.smartadserver.android.library.util.SASConfiguration;
-import com.smartadserver.android.library.rewarded.SASRewardedVideoManager;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.bridge.Callback;
@@ -42,9 +40,9 @@ public class SmartadModule extends ReactContextBaseJavaModule {
      * Ad Variables
      ****************************/
 
-     SASAdPlacement                                mRewardedVideoPlacement;
-     SASRewardedVideoManager                       mRewardedVideoManager;
-     SASRewardedVideoManager.RewardedVideoListener mRewardedVideoListener;
+     SASAdPlacement mInterstitialPlacement;
+     SASInterstitialManager mInterstitialManager;
+     SASInterstitialManager.InterstitialListener mInterstitialListener;
  
     /****************************
      * Members declarations
@@ -62,7 +60,7 @@ public class SmartadModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void initializeRewardedVideo(final @NonNull int SITE_ID, final @NonNull String PAGE_ID, final @NonNull int FORMAT_ID, final @Nullable String TARGET) {
+    public void initializeInterstitial(final @NonNull int SITE_ID, final @NonNull String PAGE_ID, final @NonNull int FORMAT_ID, final @Nullable String TARGET) {
         // Enables output to log.
         SASConfiguration.getSharedInstance().setLoggingEnabled(true);
 
@@ -71,125 +69,89 @@ public class SmartadModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 SASConfiguration.getSharedInstance().configure(reactContext, SITE_ID, "https://mobile.smartadserver.com");
-                mRewardedVideoPlacement = new SASAdPlacement(SITE_ID, PAGE_ID, FORMAT_ID, TARGET);
-                mRewardedVideoManager = new SASRewardedVideoManager(reactContext, mRewardedVideoPlacement);
-                initRewardVideoListener();
-                mRewardedVideoManager.setRewardedVideoListener(mRewardedVideoListener);
+                mInterstitialPlacement = new SASAdPlacement(SITE_ID, PAGE_ID, FORMAT_ID, TARGET);
+                mInterstitialManager = new SASInterstitialManager(reactContext, mInterstitialPlacement);
+                initInterstitialListener();
+                mInterstitialManager.setInterstitialListener(mInterstitialListener);
             }
         });
     }
 
     @ReactMethod
-    public void loadRewardedVideoAd() {
-        if (mRewardedVideoManager != null) {
-            mRewardedVideoManager.loadRewardedVideo();
+    public void loadInterstitialAd() {
+        if (mInterstitialManager != null) {
+            mInterstitialManager.loadInterstitialAd();
         } else {
-            sendEvent("smartAdRewardedVideoAdFailedToLoad", null);
+            sendEvent("smartInterstitialFailedToLoad", null);
         }
     }
 
     @ReactMethod
-    public void showRewardedVideo() {
-        if (mRewardedVideoManager != null && mRewardedVideoManager.getAdStatus() == SASAdStatus.READY) {
-            mRewardedVideoManager.showRewardedVideo();
+    public void showInterstitialAd() {
+        if (mInterstitialManager != null && mInterstitialManager.getAdStatus() == SASAdStatus.READY) {
+            mInterstitialManager.showInterstitialAd();
         } else {
-            Log.e(SmartadModule.TAG, "RewardedVideo is not ready for the current placement.");
-            sendEvent("smartAdRewardedVideoNotReady", null);
+            Log.e(SmartadModule.TAG, "Interstitial is not ready for the current placement.");
+            sendEvent("smartInterstitialNotReady", null);
         }
     }
 
-    private void initRewardVideoListener() {
-        this.mRewardedVideoListener = new SASRewardedVideoManager.RewardedVideoListener() {
+    private void initInterstitialListener() {
+        this.mInterstitialListener = new SASInterstitialManager.InterstitialListener() {
             @Override
-            public void onRewardedVideoAdLoaded(SASRewardedVideoManager rewardedVideoManager, SASAdElement adElement) {
-                Log.i(SmartadModule.TAG, "RewardedVideo Ad loading completed.");
-
-                SASNativeVideoAdElement castedAd = (SASNativeVideoAdElement)adElement;
-                if (!castedAd.getPosterImageUrl().isEmpty()) {
-                    WritableMap params = Arguments.createMap();
-
-                    HashMap<String, Object> extraParameters = adElement.getExtraParameters();
-                    WritableMap extraParams = Arguments.createMap();
-                    for (Map.Entry<String, Object> entry : extraParameters.entrySet()) {
-                        extraParams.putString(entry.getKey(), entry.getValue().toString());
-                    }
-
-                    params.putString("url", castedAd.getPosterImageUrl());
-                    params.putMap("extraparams", extraParams);
-
-                    sendEvent("kSmartAdVignette", params);
-                }
-                sendEvent("smartAdRewardedVideoAdLoaded", null);
+            public void onInterstitialAdLoaded(SASInterstitialManager interstitialManager, SASAdElement adElement) {
+                Log.i(SmartadModule.TAG, "Interstitial Ad loading completed.");            
+                sendEvent("smartAdInterstitialAdLoaded", null);
             }
 
             @Override
-            public void onRewardedVideoAdFailedToLoad(SASRewardedVideoManager rewardedVideoManager, Exception exception) {
-                Log.i(SmartadModule.TAG, "RewardedVideo Ad loading failed with exception: " + exception.getLocalizedMessage());
+            public void onInterstitialAdFailedToLoad(SASInterstitialManager interstitialManager, Exception exception) {
+                Log.i(SmartadModule.TAG, "Interstitial Ad loading failed with exception: " + exception.getLocalizedMessage());
                 WritableMap params = Arguments.createMap();
                 params.putString("message", exception.getLocalizedMessage());
-                sendEvent("smartAdRewardedVideoAdFailedToLoad", params);
+                sendEvent("smartAdInterstitialAdFailedToLoad", params);
             }
 
             @Override
-            public void onRewardedVideoAdShown(SASRewardedVideoManager rewardedVideoManager) {
-                Log.i(SmartadModule.TAG, "RewardedVideo ad is shown.");
-                sendEvent("smartAdRewardedVideoAdShown", null);
+            public void onInterstitialAdShown(SASInterstitialManager interstitialManager) {
+                Log.i(SmartadModule.TAG, "Interstitial Ad is shown.");
+                sendEvent("smartAdInterstitialAdShown", null);
             }
 
             @Override
-            public void onRewardedVideoAdFailedToShow(SASRewardedVideoManager rewardedVideoManager, Exception exception) {
-                Log.i(SmartadModule.TAG, "RewardedVideo playback failed with exception: " + exception.getLocalizedMessage());
-                sendEvent("smartAdVideoAdFailedToShow", null);
+            public void onInterstitialAdFailedToShow(SASInterstitialManager interstitialManager, Exception exception) {
+                Log.i(SmartadModule.TAG, "Interstitial failed to show with exception: " + exception.getLocalizedMessage());
+                sendEvent("smartAdInterstitialAdFailedToShow", null);
             }
 
             @Override
-            public void onRewardedVideoAdClosed(SASRewardedVideoManager rewardedVideoManager) {
-                Log.i(SmartadModule.TAG, "RewardedVideo closed.");
-                sendEvent("smartAdRewardedVideoAdClosed", null);
+            public void onInterstitialAdClicked(SASInterstitialManager interstitialManager) {
+                Log.i(SmartadModule.TAG, "Interstitial clicked.");
+                sendEvent("smartAdInterstitialAdClicked", null);
             }
 
             @Override
-            public void onRewardReceived(SASRewardedVideoManager rewardedVideoManager, SASReward reward) {
-                if (reward != null) {
-                    Log.i(SmartadModule.TAG, "RewardedVideo collected a reward.");
-                    Log.i(SmartadModule.TAG, "User should be rewarded with: " + reward.getAmount() + " " + reward.getCurrency() + ".");
-                    WritableMap params = Arguments.createMap();
-                    params.putDouble("amount", reward.getAmount());
-                    params.putString("currency", reward.getCurrency());
-                    sendEvent("smartAdRewardReceived", params);
-                } else {
-                    sendEvent("smartAdRewardNotReceived", null);
-                }
+            public void onInterstitialAdDismissed(SASInterstitialManager interstitialManager) {
+                Log.i(SmartadModule.TAG, "Interstitial dismissed.");
+                sendEvent("smartAdInterstitialAdDismissed", null);
             }
 
             @Override
-            public void onRewardedVideoAdClicked(SASRewardedVideoManager rewardedVideoManager) {
-                Log.i(SmartadModule.TAG, "RewardedVideo clicked.");
-                sendEvent("smartAdRewardedVideoAdClicked", null);
-            }
-
-            @Override
-            public void onRewardedVideoEvent(SASRewardedVideoManager rewardedVideoManager, int videoEvent) {
-                Log.i(SmartadModule.TAG, "RewardedVideo did send event: " + videoEvent);
+            public void onInterstitialVideoEvent(SASInterstitialManager interstitialManager, int videoEvent) {
+                Log.i(SmartadModule.TAG, "Video event " + videoEvent + " was triggered on Interstitial");
                 sendEvent("smartAdRewardedVideoEvent", null);
-            }
-
-            @Override
-            public void onRewardedVideoEndCardDisplayed(SASRewardedVideoManager rewardedVideoManager, ViewGroup endCardView) {
-                Log.i(SmartadModule.TAG, "RewardedVideo HTML EndCard displayed.");
-                sendEvent("smartAdRewardedVideoEndCardDisplayed", null);
             }
         };
     }
 
     @ReactMethod
     protected void reset() {
-        mRewardedVideoManager.reset();
+        mInterstitialManager.reset();
     }
 
     @ReactMethod
     protected void onDestroy() {
-        mRewardedVideoManager.onDestroy();
+        mInterstitialManager.onDestroy();
     }
 
     private void sendEvent(String eventName, @Nullable WritableMap params) {

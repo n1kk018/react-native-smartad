@@ -70,17 +70,17 @@ public class SmartadModule extends ReactContextBaseJavaModule {
             public void run() {
                 SASConfiguration.getSharedInstance().configure(reactContext, SITE_ID, "https://mobile.smartadserver.com");
                 mInterstitialPlacement = new SASAdPlacement(SITE_ID, PAGE_ID, FORMAT_ID, TARGET);
-                this.mInterstitialManager = new SASInterstitialManager(reactContext, mInterstitialPlacement);
+                mInterstitialManager = new SASInterstitialManager(reactContext, mInterstitialPlacement);
                 initInterstitialListener();
-                this.mInterstitialManager.setInterstitialListener(this.mInterstitialListener);
+                mInterstitialManager.setInterstitialListener(mInterstitialListener);
             }
         });
     }
 
     @ReactMethod
     public void loadInterstitialAd() {
-        if (this.mInterstitialManager != null) {
-            this.mInterstitialManager.loadAd();
+        if (mInterstitialManager != null) {
+            mInterstitialManager.loadAd();
         } else {
             sendEvent("smartInterstitialFailedToLoad", null);
         }
@@ -89,7 +89,7 @@ public class SmartadModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void showInterstitialAd() {
         if (mInterstitialManager != null && mInterstitialManager.getAdStatus() == SASAdStatus.READY) {
-            this.mInterstitialManager.show();
+            mInterstitialManager.show();
         } else {
             Log.e(SmartadModule.TAG, "Interstitial is not ready for the current placement.");
             sendEvent("smartInterstitialNotReady", null);
@@ -136,22 +136,22 @@ public class SmartadModule extends ReactContextBaseJavaModule {
                 sendEvent("smartAdInterstitialAdDismissed", null);
             }
 
-            @Override
+            /* @Override
             public void onInterstitialVideoEvent(SASInterstitialManager interstitialManager, int videoEvent) {
                 Log.i(SmartadModule.TAG, "Video event " + videoEvent + " was triggered on Interstitial");
                 sendEvent("smartAdRewardedVideoEvent", null);
-            }
+            } */
         };
     }
 
     @ReactMethod
     protected void reset() {
-        this.mInterstitialManager.reset();
+        mInterstitialManager.reset();
     }
 
     @ReactMethod
     protected void onDestroy() {
-       this.mInterstitialManager.onDestroy();
+       mInterstitialManager.onDestroy();
     }
 
     private void sendEvent(String eventName, @Nullable WritableMap params) {

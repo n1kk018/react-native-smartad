@@ -72,15 +72,15 @@ public class SmartadModule extends ReactContextBaseJavaModule {
                 mInterstitialPlacement = new SASAdPlacement(SITE_ID, PAGE_ID, FORMAT_ID, TARGET);
                 this.mInterstitialManager = new SASInterstitialManager(reactContext, mInterstitialPlacement);
                 initInterstitialListener();
-                this.mInterstitialManager.setInterstitialListener(mInterstitialListener);
+                this.mInterstitialManager.setInterstitialListener(this.mInterstitialListener);
             }
         });
     }
 
     @ReactMethod
     public void loadInterstitialAd() {
-        if (mInterstitialManager != null) {
-            this.mInterstitialManager.loadInterstitialAd();
+        if (this.mInterstitialManager != null) {
+            this.mInterstitialManager.loadAd();
         } else {
             sendEvent("smartInterstitialFailedToLoad", null);
         }
@@ -89,7 +89,7 @@ public class SmartadModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void showInterstitialAd() {
         if (mInterstitialManager != null && mInterstitialManager.getAdStatus() == SASAdStatus.READY) {
-            this.mInterstitialManager.showInterstitialAd();
+            this.mInterstitialManager.show();
         } else {
             Log.e(SmartadModule.TAG, "Interstitial is not ready for the current placement.");
             sendEvent("smartInterstitialNotReady", null);
@@ -151,7 +151,7 @@ public class SmartadModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     protected void onDestroy() {
-       this. mInterstitialManager.onDestroy();
+       this.mInterstitialManager.onDestroy();
     }
 
     private void sendEvent(String eventName, @Nullable WritableMap params) {

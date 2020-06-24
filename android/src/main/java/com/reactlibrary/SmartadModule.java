@@ -136,11 +136,11 @@ public class SmartadModule extends ReactContextBaseJavaModule {
                 sendEvent("smartAdInterstitialAdDismissed", null);
             }
 
-            /* @Override
-            public void onInterstitialVideoEvent(SASInterstitialManager interstitialManager, int videoEvent) {
+            @Override
+            public void onInterstitialAdVideoEvent(SASInterstitialManager interstitialManager, int videoEvent) {
                 Log.i(SmartadModule.TAG, "Video event " + videoEvent + " was triggered on Interstitial");
-                sendEvent("smartAdRewardedVideoEvent", null);
-            } */
+                sendEvent("smartAdInterstitialAdVideoEvent", null);
+            }
         };
     }
 

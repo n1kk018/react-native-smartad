@@ -69,7 +69,8 @@ public class SmartadModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 SASConfiguration.getSharedInstance().configure(reactContext, SITE_ID, "https://mobile.smartadserver.com");
-                mInterstitialPlacement = new SASAdPlacement(SITE_ID, PAGE_ID, FORMAT_ID, TARGET);
+                //mInterstitialPlacement = new SASAdPlacement(SITE_ID, PAGE_ID, FORMAT_ID, TARGET);
+                mInterstitialPlacement = SASAdPlacement.MRAID_INTERSTITIAL_TEST_PLACEMENT;
                 mInterstitialManager = new SASInterstitialManager(reactContext, mInterstitialPlacement);
                 initInterstitialListener();
                 mInterstitialManager.setInterstitialListener(mInterstitialListener);

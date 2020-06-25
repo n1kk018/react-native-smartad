@@ -1,25 +1,20 @@
 #import "Smartad.h"
 #import "RCTUtils.h"
 
-NSString *const kSmartAdRewardedVideoNotReady = @"smartAdRewardedVideoNotReady";
-NSString *const kSmartAdRewardedVideoAdLoaded = @"smartAdRewardedVideoAdLoaded";
-NSString *const kSmartAdRewardedVideoAdFailedToLoad = @"smartAdRewardedVideoAdFailedToLoad";
-NSString *const kSmartAdRewardedVideoAdShown = @"smartAdRewardedVideoAdShown";
-NSString *const kSmartAdVideoAdFailedToShow = @"smartAdVideoAdFailedToShow";
-NSString *const kSmartAdRewardedVideoAdClosed = @"smartAdRewardedVideoAdClosed";
-NSString *const kSmartAdRewardReceived = @"smartAdRewardReceived";
-NSString *const kSmartAdRewardNotReceived = @"smartAdRewardNotReceived";
-NSString *const kSmartAdRewardedVideoAdClicked = @"smartAdRewardedVideoAdClicked";
-NSString *const kSmartAdRewardedVideoEvent = @"smartAdRewardedVideoEvent";
-NSString *const kSmartAdRewardedVideoEndCardDisplayed = @"smartAdRewardedVideoEndCardDisplayed";
-NSString *const kSmartAdVignette = @"kSmartAdVignette";
-NSString *const kSmartAdCustomAdvertiser = @"kSmartAdCustomAdvertiser";
+NSString *const kSmartAdInterstitialAdNotReady = @"smartAdInterstitialAdNotReady";
+NSString *const kSmartAdInterstitialAdLoaded = @"smartAdInterstitialAdLoaded";
+NSString *const kSmartAdInterstitialAdFailedToLoad = @"smartAdInterstitialAdFailedToLoad";
+NSString *const kSmartAdInterstitialAdShown = @"smartAdInterstitialAdShown";
+NSString *const kSmartAdInterstitialAdFailedToShow = @"smartAdInterstitialAdFailedToShow";
+NSString *const kSmartAdInterstitialAdClicked = @"smartAdInterstitialAdClicked";
+NSString *const kSmartAdInterstitialAdDismissed = @"smartAdInterstitialAdDismissed";
+NSString *const kSmartAdInterstitialAdVideoEvent = @"smartAdInterstitialAdVideoEvent";
 
 #define kBaseURL @"https://mobile.smartadserver.com"
 
-@interface Smartad () <SASRewardedVideoManagerDelegate>
+@interface Smartad () <SASInterstitialManagerDelegate>
 
-@property SASRewardedVideoManager *rewardedVideoManager;
+@property SASInterstitialManager *interstitialManager;
 @property (nonatomic, strong) SASNativeAd *nativeAd;
 @end
 
@@ -36,54 +31,50 @@ RCT_EXPORT_MODULE()
 
 - (NSArray<NSString *> *)supportedEvents {
     return @[
-        kSmartAdRewardedVideoNotReady,
-        kSmartAdRewardedVideoAdLoaded,
-        kSmartAdRewardedVideoAdFailedToLoad,
-        kSmartAdRewardedVideoAdShown,
-        kSmartAdVideoAdFailedToShow,
-        kSmartAdRewardedVideoAdClosed,
-        kSmartAdRewardReceived,
-        kSmartAdRewardNotReceived,
-        kSmartAdRewardedVideoAdClicked,
-        kSmartAdRewardedVideoEvent,
-        kSmartAdRewardedVideoEndCardDisplayed,
-        kSmartAdVignette,
-        kSmartAdCustomAdvertiser ];
+        kSmartAdInterstitialAdNotReady,
+        kSmartAdInterstitialAdLoaded,
+        kSmartAdInterstitialAdFailedToLoad,
+        kSmartAdInterstitialAdShown,
+        kSmartAdInterstitialAdFailedToShow,
+        kSmartAdInterstitialAdClicked,
+        kSmartAdInterstitialAdDismissed,
+        kSmartAdInterstitialAdVideoEvent 
+    ];
 }
 
-RCT_EXPORT_METHOD(initializeRewardedVideo:(nonnull NSInteger *)kRewardedVideoSiteID kRewardedVideoPageID:(nonnull NSInteger *)kRewardedVideoPageID kRewardedVideoFormatID:(nonnull NSInteger *)kRewardedVideoFormatID kRewardedVideoKeywordTargeting:(nullable NSString *)kRewardedVideoKeywordTargeting)
+RCT_EXPORT_METHOD(initializeInterstitial:(nonnull NSInteger *)kInterstitialSiteID kInterstitialPageID:(nonnull NSInteger *)kInterstitialPageID kInterstitialFormatID:(nonnull NSInteger *)kInterstitialFormatID kInterstitialKeywordTargeting:(nullable NSString *)kInterstitialKeywordTargeting)
 {
-    [[SASConfiguration sharedInstance] configureWithSiteId:kRewardedVideoSiteID baseURL:kBaseURL];
+    [[SASConfiguration sharedInstance] configureWithSiteId:kInterstitialSiteID baseURL:kBaseURL];
     
     SASAdPlacement *placement = [SASAdPlacement
-        adPlacementWithSiteId:kRewardedVideoSiteID
-                       pageId:kRewardedVideoPageID
-                     formatId:kRewardedVideoFormatID
-             keywordTargeting:kRewardedVideoKeywordTargeting
+        adPlacementWithSiteId:kInterstitialSiteID
+                       pageId:kInterstitialPageID
+                     formatId:kInterstitialFormatID
+             keywordTargeting:kInterstitialKeywordTargeting
     ];
-    self.rewardedVideoManager = [[SASRewardedVideoManager alloc] initWithPlacement:placement delegate:self];
+    self.interstitialManager = [[SASInterstitialManager alloc] initWithPlacement:placement delegate:self];
 }
 
-RCT_EXPORT_METHOD(loadRewardedVideoAd)
+RCT_EXPORT_METHOD(loadInterstitialAd)
 {
-    if (self.rewardedVideoManager != nil) {
-        [self.rewardedVideoManager load];
+    if (self.interstitialManager != nil) {
+        [self.interstitialManager load];
     } else {
-        [self sendEventWithName:kSmartAdRewardedVideoAdFailedToLoad body:nil];
+        [self sendEventWithName:kSmartAdInterstitialAdFailedToLoad body:nil];
     }
 }
 
 RCT_EXPORT_METHOD(showRewardedVideo)
 {
-    if (self.rewardedVideoManager != nil && self.rewardedVideoManager.adStatus == SASAdStatusReady) {
+    if (self.interstitialManager != nil && self.interstitialManager.adStatus == SASAdStatusReady) {
         
         UIViewController* vc = RCTPresentedViewController();
-        [self.rewardedVideoManager showFromViewController:vc];
-    } else if (self.rewardedVideoManager.adStatus == SASAdStatusExpired) {
-        NSLog(@"RewardedVideo has expired and cannot be shown anymore.");
-        [self sendEventWithName:kSmartAdRewardedVideoNotReady body:nil];
+        [self.interstitialManager showFromViewController:vc];
+    } else if (self.interstitialManager.adStatus == SASAdStatusExpired) {
+        NSLog(@"Interstitial has expired and cannot be shown anymore.");
+        [self sendEventWithName:kSmartAdInterstitialAdNotReady body:nil];
     } else {
-        [self sendEventWithName:kSmartAdRewardedVideoNotReady body:nil];
+        [self sendEventWithName:kSmartAdInterstitialAdNotReady body:nil];
     }
 }
 
@@ -94,52 +85,38 @@ RCT_EXPORT_METHOD(reset)
 {}
 
 
-- (void)rewardedVideoManager:(SASRewardedVideoManager *)manager didFailToLoadWithError: (NSError *)error {
-    NSLog(@"RewardedVideo did fail to load with error: %@", [error localizedDescription]);
-    [self sendEventWithName:kSmartAdRewardedVideoAdFailedToLoad body:nil];
+- (void)interstitialManager:(SASInterstitialManager *)manager didFailToLoadWithError: (NSError *)error {
+    NSLog(@"Interstitial did fail to load with error: %@", [error localizedDescription]);
+    [self sendEventWithName:kSmartAdInterstitialAdFailedToLoad body:nil];
 }
 
-- (void)rewardedVideoManager:(SASRewardedVideoManager *)manager didAppearFromViewController: (UIViewController *)controller {
-    NSLog(@"RewardedVideo did appear");
-    [self sendEventWithName:kSmartAdRewardedVideoAdShown body:nil];
+- (void)interstitialManager:(SASInterstitialManager *)manager didAppearFromViewController: (UIViewController *)controller {
+    NSLog(@"Interstitial did appear");
+    [self sendEventWithName:kSmartAdInterstitialAdShown body:nil];
 }
 
-- (void)rewardedVideoManager:(SASRewardedVideoManager *)manager didFailToShowWithError: (NSError *)error {
-    NSLog(@"RewardedVideo did fail to show with error: %@", [error localizedDescription]);
-    [self sendEventWithName:kSmartAdVideoAdFailedToShow body:nil];
+- (void)interstitialManager:(SASInterstitialManager *)manager didFailToShowWithError: (NSError *)error {
+    NSLog(@"Interstitial did fail to show with error: %@", [error localizedDescription]);
+    [self sendEventWithName:kSmartAdInterstitialAdFailedToShow body:nil];
 }
 
-- (void)rewardedVideoManager:(SASRewardedVideoManager *)manager didDisappearFromViewController: (UIViewController *)controller {
-    NSLog(@"RewardedVideo did disappear");
-    [self sendEventWithName:kSmartAdRewardedVideoAdClosed body:nil];
+- (void)interstitialManager:(SASInterstitialManager *)manager didDisappearFromViewController: (UIViewController *)controller {
+    NSLog(@"Interstitial did disappear");
+    [self sendEventWithName:kSmartAdInterstitialAdDismissed body:nil];
 }
 
-- (void)rewardedVideoManager:(SASRewardedVideoManager *)manager didCollectReward: (SASReward *)reward {
-    NSLog(@"RewardedVideo did collect reward");
-    if (reward != nil) {
-        NSLog(@"RewardedVideo did collect reward for currency %@ with amount %ld", reward.currency, (long)[reward.amount integerValue]);
-        [self sendEventWithName:kSmartAdRewardReceived body:@{@"amount":reward.amount,  @"currency":reward.currency}];
-    } else {
-        [self sendEventWithName:kSmartAdRewardNotReceived body:nil];
-    }
+- (void)interstitialManager:(SASInterstitialManager *)manager shouldHandleURL: (NSURL *)URL {
+    NSLog(@"Interstitial should Handle url");
+    [self sendEventWithName:kSmartAdInterstitialAdClicked body:nil];
 }
 
-- (void)rewardedVideoManager:(SASRewardedVideoManager *)manager shouldHandleURL: (NSURL *)URL {
-    NSLog(@"RewardedVideo should Handle url");
-    [self sendEventWithName:kSmartAdRewardedVideoAdClicked body:nil];
+- (void)interstitialManager:(SASInterstitialManager *)manager didSendVideoEvent: (SASVideoEvent *)videoEvent {
+    NSLog(@"Interstitial did send video event: %li", (long)videoEvent);
+    [self sendEventWithName:kSmartAdInterstitialAdVideoEvent body:nil];
 }
 
-- (void)rewardedVideoManager:(SASRewardedVideoManager *)manager didSendVideoEvent: (SASVideoEvent *)videoEvent {
-    NSLog(@"RewardedVideo did send video event: %li", (long)videoEvent);
-    [self sendEventWithName:kSmartAdRewardedVideoEvent body:nil];
-}
 
-- (void)rewardedVideoManager:(SASRewardedVideoManager *)manager didLoadEndCardFromViewController: (UIViewController *)controller {
-    NSLog(@"RewardedVideo did load end card");
-    [self sendEventWithName:kSmartAdRewardedVideoEndCardDisplayed body:nil];
-}
-
-- (void)rewardedVideoManager:(SASRewardedVideoManager *)manager willPresentModalViewFromViewController: (UIViewController *)controller {
+/* - (void)rewardedVideoManager:(SASRewardedVideoManager *)manager willPresentModalViewFromViewController: (UIViewController *)controller {
     NSLog(@"RewardedVideo will present modal");
     
 }
@@ -147,20 +124,20 @@ RCT_EXPORT_METHOD(reset)
 - (void)rewardedVideoManager:(SASRewardedVideoManager *)manager willDismissModalViewFromViewController: (UIViewController *)controller {
     NSLog(@"RewardedVideo will modal view ");
     
-}
+} */
 
-- (void)rewardedVideoManager:(SASRewardedVideoManager *)manager didLoadAd:(SASAd *)ad {
-    NSLog(@"RewardedVideo has been loaded and is ready to be shown");
+- (void)interstitialManager:(SASInterstitialManager *)manager didLoadAd:(SASAd *)ad {
+    NSLog(@"Interstitial has been loaded and is ready to be shown");
 
     // Find Ad vignette
-    SASNativeVideoAd *castedAd = (SASNativeVideoAd *)ad;
+    /* SASNativeVideoAd *castedAd = (SASNativeVideoAd *)ad;
     if (castedAd.posterImageUrl) {
         NSDictionary *extraParameters = ad.extraParameters;
         NSLog(@"Vignette is found at: %@", [castedAd.posterImageUrl absoluteString]);
         [self sendEventWithName:kSmartAdVignette body:@{@"url":[castedAd.posterImageUrl absoluteString], @"extraparams":extraParameters}];
-    }
+    } */
 
-    [self sendEventWithName:kSmartAdRewardedVideoAdLoaded body:nil];
+    [self sendEventWithName:kSmartAdInterstitialAdLoaded body:nil];
 }
 
 @end

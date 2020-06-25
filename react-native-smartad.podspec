@@ -9,12 +9,12 @@ Pod::Spec.new do |s|
   s.description  = <<-DESC
                   react-native-smartad
                    DESC
-  s.homepage     = "https://github.com/RedPillGroup/react-native-smartad"
+  s.homepage     = "https://github.com/n1kk018/react-native-smartad"
   s.license      = "MIT"
   # s.license    = { :type => "MIT", :file => "FILE_LICENSE" }
   s.authors      = { "bsisic" => "baptiste@redpillparis.com" }
   s.platforms    = { :ios => "9.0" }
-  s.source       = { :git => "https://github.com/RedPillGroup/react-native-smartad.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/n1kk018/react-native-smartad.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,swift}"
   s.requires_arc = true

@@ -1,38 +1,30 @@
 import { NativeModules, NativeEventEmitter } from 'react-native';
 
-const RNSmartAdRewardedVideo = NativeModules.Smartad;
-const SmartAdRewardedVideoEventEmitter = new NativeEventEmitter(RNSmartAdRewardedVideo);
+const RNSmartInterstitial = NativeModules.Smartad;
+const SmartAdInterstitialEventEmitter = new NativeEventEmitter(RNSmartInterstitial);
 
 const eventHandlers = {
-  smartAdRewardedVideoNotReady: new Map(),
-  smartAdRewardedVideoAdLoaded: new Map(),
-  smartAdRewardedVideoAdFailedToLoad: new Map(),
-  smartAdRewardedVideoAdShown: new Map(),
-  smartAdVideoAdFailedToShow: new Map(),
-  smartAdRewardedVideoAdClosed: new Map(),
-  smartAdRewardReceived: new Map(),
-  smartAdRewardNotReceived: new Map(),
-  smartAdRewardedVideoAdClicked: new Map(),
-  smartAdRewardedVideoEvent: new Map(),
-  smartAdRewardedVideoEndCardDisplayed: new Map(),
-  kSmartAdVignette:new Map(),
+  smartAdInterstitialAdNotReady: new Map(),
+  smartAdInterstitialAdLoaded: new Map(),
+  smartAdInterstitialAdFailedToLoad: new Map(),
+  smartAdInterstitialAdShown: new Map(),
+  smartAdInterstitialAdFailedToShow: new Map(),
+  smartAdInterstitialAdClicked: new Map(),
+  smartAdInterstitialAdDismissed: new Map(),
+  smartAdInterstitialAdVideoEvent: new Map(),
 }
 
 const addEventListener = (type, handler) => {
   switch (type) {
-    case 'smartAdRewardedVideoNotReady':
-    case 'smartAdRewardedVideoAdLoaded':
-    case 'smartAdRewardedVideoAdFailedToLoad':
-    case 'smartAdRewardedVideoAdShown':
-    case 'smartAdVideoAdFailedToShow':
-    case 'smartAdRewardedVideoAdClosed':
-    case 'smartAdRewardReceived':
-    case 'smartAdRewardNotReceived':
-    case 'smartAdRewardedVideoAdClicked':
-    case 'smartAdRewardedVideoEvent':
-    case 'kSmartAdVignette':
-    case 'smartAdRewardedVideoEndCardDisplayed':
-      eventHandlers[type].set(handler, SmartAdRewardedVideoEventEmitter.addListener(type, handler));
+    case 'smartAdInterstitialAdFailedToLoad':
+    case 'smartAdInterstitialAdNotReady':
+    case 'smartAdInterstitialAdLoaded':
+    case 'smartAdInterstitialAdShown':
+    case 'smartAdInterstitialAdFailedToShow':
+    case 'smartAdInterstitialAdClicked':
+    case 'smartAdInterstitialAdDismissed':
+    case 'smartAdInterstitialAdVideoEvent':
+      eventHandlers[type].set(handler, SmartAdInterstitialEventEmitter.addListener(type, handler));
       break;
     default:
       console.log(`Event with type ${type} does not exist.`);
@@ -48,42 +40,38 @@ const removeEventListener = (type, handler) => {
 };
 
 const removeAllListeners = () => {
-  SmartAdRewardedVideoEventEmitter.removeAllListeners('smartAdRewardedVideoNotReady');
-  SmartAdRewardedVideoEventEmitter.removeAllListeners('smartAdRewardedVideoAdLoaded');
-  SmartAdRewardedVideoEventEmitter.removeAllListeners('smartAdRewardedVideoAdFailedToLoad');
-  SmartAdRewardedVideoEventEmitter.removeAllListeners('smartAdRewardedVideoAdShown');
-  SmartAdRewardedVideoEventEmitter.removeAllListeners('smartAdVideoAdFailedToShow');
-  SmartAdRewardedVideoEventEmitter.removeAllListeners('smartAdRewardedVideoAdClosed');
-  SmartAdRewardedVideoEventEmitter.removeAllListeners('smartAdRewardReceived');
-  SmartAdRewardedVideoEventEmitter.removeAllListeners('smartAdRewardNotReceived');
-  SmartAdRewardedVideoEventEmitter.removeAllListeners('smartAdRewardedVideoAdClicked');
-  SmartAdRewardedVideoEventEmitter.removeAllListeners('smartAdRewardedVideoEvent');
-  SmartAdRewardedVideoEventEmitter.removeAllListeners('kSmartAdVignette');
-  SmartAdRewardedVideoEventEmitter.removeAllListeners('smartAdRewardedVideoEndCardDisplayed');
+  SmartAdInterstitialEventEmitter.removeAllListeners('smartAdInterstitialAdNotReady');
+  SmartAdInterstitialEventEmitter.removeAllListeners('smartAdInterstitialAdLoaded');
+  SmartAdInterstitialEventEmitter.removeAllListeners('smartAdInterstitialAdFailedToLoad');
+  SmartAdInterstitialEventEmitter.removeAllListeners('smartAdInterstitialAdShown');
+  SmartAdInterstitialEventEmitter.removeAllListeners('smartAdInterstitialAdFailedToShow');
+  SmartAdInterstitialEventEmitter.removeAllListeners('smartAdInterstitialAdClicked');
+  SmartAdInterstitialEventEmitter.removeAllListeners('smartAdInterstitialAdDismissed');
+  SmartAdInterstitialEventEmitter.removeAllListeners('smartAdInterstitialAdVideoEvent');
 }
 
-const loadAndShowRewardedVideo = () => {
+const loadAndShowInterstitial = () => {
   const showAndDelete = () => {
-    RNSmartAdRewardedVideo.showRewardedVideo();
-    removeEventListener('smartAdRewardedVideoAdLoaded', showAndDelete);
-    removeEventListener('smartAdRewardedVideoAdFailedToLoad', errorDelete);
+    RNSmartInterstitial.showInterstitialAd();
+    removeEventListener('smartAdInterstitialAdLoaded', showAndDelete);
+    removeEventListener('smartAdInterstitialAdFailedToLoad', errorDelete);
   }
   const errorDelete = () => {
-    removeEventListener('smartAdRewardedVideoAdLoaded', showAndDelete);
-    removeEventListener('smartAdRewardedVideoAdFailedToLoad', errorDelete);
+    removeEventListener('smartAdInterstitialAdLoaded', showAndDelete);
+    removeEventListener('smartAdInterstitialAdFailedToLoad', errorDelete);
   }
 
-  addEventListener('smartAdRewardedVideoAdLoaded', showAndDelete);
-  addEventListener('smartAdRewardedVideoAdFailedToLoad', errorDelete);
-  RNSmartAdRewardedVideo.loadRewardedVideoAd();
+  addEventListener('smartAdInterstitialAdLoaded', showAndDelete);
+  addEventListener('smartAdInterstitialAdFailedToLoad', errorDelete);
+  RNSmartInterstitial.loadInterstitialAd();
 }
 
 module.exports = {
-  ...RNSmartAdRewardedVideo,
-  initializeRewardedVideo: (siteId, pageId, formatId, target) => RNSmartAdRewardedVideo.initializeRewardedVideo(siteId, pageId, formatId, target),
-  showRewardedVideo: () => RNSmartAdRewardedVideo.showRewardedVideo(),
-  loadRewardedVideo: () => RNSmartAdRewardedVideo.loadRewardedVideoAd(),
-  loadAndShowRewardedVideo,
+  ...RNSmartInterstitial,
+  initializeRewardedVideo: (siteId, pageId, formatId, target) => RNSmartInterstitial.initializeInterstitial(siteId, pageId, formatId, target),
+  showInterstitial: () => RNSmartInterstitial.showInterstitialAd(),
+  loadInterstitial: () => RNSmartInterstitial.loadInterstitialAd(),
+  loadAndShowInterstitial,
   addEventListener,
   removeEventListener,
   removeAllListeners

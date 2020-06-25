@@ -82,7 +82,7 @@ public class SmartadModule extends ReactContextBaseJavaModule {
         if (mInterstitialManager != null) {
             mInterstitialManager.loadAd();
         } else {
-            sendEvent("smartInterstitialFailedToLoad", null);
+            sendEvent("smartAdInterstitialAdFailedToLoad", null);
         }
     }
 
@@ -92,7 +92,7 @@ public class SmartadModule extends ReactContextBaseJavaModule {
             mInterstitialManager.show();
         } else {
             Log.e(SmartadModule.TAG, "Interstitial is not ready for the current placement.");
-            sendEvent("smartInterstitialNotReady", null);
+            sendEvent("smartAdInterstitialAdNotReady", null);
         }
     }
 

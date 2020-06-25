@@ -68,7 +68,7 @@ const loadAndShowInterstitial = () => {
 
 module.exports = {
   ...RNSmartInterstitial,
-  initializeRewardedVideo: (siteId, pageId, formatId, target) => RNSmartInterstitial.initializeInterstitial(siteId, pageId, formatId, target),
+  initializeInterstitial: (siteId, pageId, formatId, target) => RNSmartInterstitial.initializeInterstitial(siteId, pageId, formatId, target),
   showInterstitial: () => RNSmartInterstitial.showInterstitialAd(),
   loadInterstitial: () => RNSmartInterstitial.loadInterstitialAd(),
   loadAndShowInterstitial,

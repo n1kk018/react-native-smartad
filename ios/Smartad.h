@@ -13,12 +13,12 @@
 
 #import <SASDisplayKit/SASDisplayKit.h>
 
-@interface Smartad : RCTEventEmitter <RCTBridgeModule, SASRewardedVideoManagerDelegate>
+@interface Smartad : RCTEventEmitter <RCTBridgeModule, SASInterstitialDelegate>
 
 @end
 
 @interface SASNativeVideoAd : SASAd;
 
-@property (nonatomic, retain) NSURL *posterImageUrl;
+//@property (nonatomic, retain) NSURL *posterImageUrl;
 
 @end

@@ -15,11 +15,11 @@ NSString *const kSmartAdInterstitialAdVideoEvent = @"smartAdInterstitialAdVideoE
 @interface Smartad () <SASInterstitialManagerDelegate>
 
 @property SASInterstitialManager *interstitialManager;
-@property (nonatomic, strong) SASNativeAd *nativeAd;
+//@property (nonatomic, strong) SASNativeAd *nativeAd;
 @end
 
 @implementation Smartad {
-    RCTResponseSenderBlock _requestRewardedVideoCallback;
+    RCTResponseSenderBlock _requestInterstitialCallback;
 }
 
 - (dispatch_queue_t)methodQueue
@@ -42,7 +42,11 @@ RCT_EXPORT_MODULE()
     ];
 }
 
-RCT_EXPORT_METHOD(initializeInterstitial:(nonnull NSInteger *)kInterstitialSiteID kInterstitialPageID:(nonnull NSInteger *)kInterstitialPageID kInterstitialFormatID:(nonnull NSInteger *)kInterstitialFormatID kInterstitialKeywordTargeting:(nullable NSString *)kInterstitialKeywordTargeting)
+RCT_EXPORT_METHOD(initializeInterstitial, 
+                kInterstitialSiteID:(nonnull NSInteger *)kInterstitialSiteID 
+                kInterstitialPageID:(nonnull NSInteger *)kInterstitialPageID 
+                kInterstitialFormatID:(nonnull NSInteger *)kInterstitialFormatID 
+                kInterstitialKeywordTargeting:(nullable NSString *)kInterstitialKeywordTargeting)
 {
     [[SASConfiguration sharedInstance] configureWithSiteId:kInterstitialSiteID baseURL:kBaseURL];
     

@@ -15,7 +15,7 @@ NSString *const kSmartAdInterstitialAdDismissed = @"smartAdInterstitialAdDismiss
 @interface Smartad () <SASInterstitialManagerDelegate>
 
 @property SASInterstitialManager *interstitialManager;
-@property (nonatomic, strong) SASNativeAd *nativeAd;
+//@property (nonatomic, strong) SASNativeAd *nativeAd;
 @end
 
 @implementation Smartad {

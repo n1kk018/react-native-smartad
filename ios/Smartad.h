@@ -13,7 +13,7 @@
 
 #import <SASDisplayKit/SASDisplayKit.h>
 
-@interface Smartad : RCTEventEmitter <RCTBridgeModule, SASInterstitialDelegate>
+@interface Smartad : RCTEventEmitter <RCTBridgeModule, SASInterstitialManagerDelegate>
 
 @end
 

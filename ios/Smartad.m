@@ -8,7 +8,7 @@ NSString *const kSmartAdInterstitialAdShown = @"smartAdInterstitialAdShown";
 NSString *const kSmartAdInterstitialAdFailedToShow = @"smartAdInterstitialAdFailedToShow";
 NSString *const kSmartAdInterstitialAdClicked = @"smartAdInterstitialAdClicked";
 NSString *const kSmartAdInterstitialAdDismissed = @"smartAdInterstitialAdDismissed";
-NSString *const kSmartAdInterstitialAdVideoEvent = @"smartAdInterstitialAdVideoEvent";
+//NSString *const kSmartAdInterstitialAdVideoEvent = @"smartAdInterstitialAdVideoEvent";
 
 #define kBaseURL @"https://mobile.smartadserver.com"
 
@@ -38,13 +38,13 @@ RCT_EXPORT_MODULE()
         kSmartAdInterstitialAdFailedToShow,
         kSmartAdInterstitialAdClicked,
         kSmartAdInterstitialAdDismissed,
-        kSmartAdInterstitialAdVideoEvent 
+        //kSmartAdInterstitialAdVideoEvent 
     ];
 }
 
 RCT_EXPORT_METHOD(initializeInterstitial, 
                 kInterstitialSiteID:(nonnull NSInteger *)kInterstitialSiteID 
-                kInterstitialPageID:(nonnull NSInteger *)kInterstitialPageID 
+                kInterstitialPageID:(nonnull NSString *)kInterstitialPageID 
                 kInterstitialFormatID:(nonnull NSInteger *)kInterstitialFormatID 
                 kInterstitialKeywordTargeting:(nullable NSString *)kInterstitialKeywordTargeting)
 {

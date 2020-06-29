@@ -17,7 +17,7 @@
 
 @end
 
-@interface SASNativeVideoAd : SASAd;
+//@interface SASNativeVideoAd : SASAd;
 
 //@property (nonatomic, retain) NSURL *posterImageUrl;
 

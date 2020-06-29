@@ -15,7 +15,7 @@ NSString *const kSmartAdInterstitialAdDismissed = @"smartAdInterstitialAdDismiss
 @interface Smartad () <SASInterstitialManagerDelegate>
 
 @property SASInterstitialManager *interstitialManager;
-//@property (nonatomic, strong) SASNativeAd *nativeAd;
+@property (nonatomic, strong) SASNativeAd *nativeAd;
 @end
 
 @implementation Smartad {
@@ -42,11 +42,7 @@ RCT_EXPORT_MODULE()
     ];
 }
 
-RCT_EXPORT_METHOD(initializeInterstitial, 
-                kInterstitialSiteID:(nonnull NSInteger *)kInterstitialSiteID 
-                kInterstitialPageID:(nonnull NSString *)kInterstitialPageID 
-                kInterstitialFormatID:(nonnull NSInteger *)kInterstitialFormatID 
-                kInterstitialKeywordTargeting:(nullable NSString *)kInterstitialKeywordTargeting)
+RCT_EXPORT_METHOD(initializeInterstitial:(nonnull NSInteger *)kInterstitialSiteID kInterstitialPageID:(nonnull NSString *)kInterstitialPageID kInterstitialFormatID:(nonnull NSInteger *)kInterstitialFormatID kInterstitialKeywordTargeting:(nullable NSString *)kInterstitialKeywordTargeting)
 {
     [[SASConfiguration sharedInstance] configureWithSiteId:kInterstitialSiteID baseURL:kBaseURL];
     

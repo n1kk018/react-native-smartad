@@ -15,7 +15,6 @@ NSString *const kSmartAdInterstitialAdVideoEvent = @"smartAdInterstitialAdVideoE
 @interface Smartad () <SASInterstitialManagerDelegate>
 
 @property SASInterstitialManager *interstitialManager;
-@property (nonatomic, strong) SASNativeAd *nativeAd;
 @end
 
 @implementation Smartad {

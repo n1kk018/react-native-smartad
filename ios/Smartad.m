@@ -52,6 +52,10 @@ RCT_EXPORT_METHOD(initializeInterstitial:(nonnull NSInteger *)kInterstitialSiteI
                      formatId:kInterstitialFormatID
              keywordTargeting:kInterstitialKeywordTargeting
     ];
+    
+    #ifdef DEBUG
+        *placement = SASAdPlacement.MRAID_INTERSTITIAL_TEST_PLACEMENT;
+    #endif
     self.interstitialManager = [[SASInterstitialManager alloc] initWithPlacement:placement delegate:self];
 }
 

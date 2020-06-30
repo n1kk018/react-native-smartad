@@ -8,14 +8,14 @@ NSString *const kSmartAdInterstitialAdShown = @"smartAdInterstitialAdShown";
 NSString *const kSmartAdInterstitialAdFailedToShow = @"smartAdInterstitialAdFailedToShow";
 NSString *const kSmartAdInterstitialAdClicked = @"smartAdInterstitialAdClicked";
 NSString *const kSmartAdInterstitialAdDismissed = @"smartAdInterstitialAdDismissed";
-//NSString *const kSmartAdInterstitialAdVideoEvent = @"smartAdInterstitialAdVideoEvent";
+NSString *const kSmartAdInterstitialAdVideoEvent = @"smartAdInterstitialAdVideoEvent";
 
 #define kBaseURL @"https://mobile.smartadserver.com"
 
 @interface Smartad () <SASInterstitialManagerDelegate>
 
 @property SASInterstitialManager *interstitialManager;
-//@property (nonatomic, strong) SASNativeAd *nativeAd;
+@property (nonatomic, strong) SASNativeAd *nativeAd;
 @end
 
 @implementation Smartad {

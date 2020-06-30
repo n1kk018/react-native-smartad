@@ -54,7 +54,9 @@ RCT_EXPORT_METHOD(initializeInterstitial:(nonnull NSInteger *)kInterstitialSiteI
     ];
     
     #ifdef DEBUG
-        *placement = SASAdPlacement.MRAID_INTERSTITIAL_TEST_PLACEMENT;
+        *placement = [SASAdPlacement
+        adPlacementWithTestAd: SASAdPlacementTestInterstitialMRAID
+    ];
     #endif
     self.interstitialManager = [[SASInterstitialManager alloc] initWithPlacement:placement delegate:self];
 }

@@ -70,7 +70,7 @@ RCT_EXPORT_METHOD(loadInterstitialAd)
     }
 }
 
-RCT_EXPORT_METHOD(showRewardedVideo)
+RCT_EXPORT_METHOD(showInterstitialAd)
 {
     if (self.interstitialManager != nil && self.interstitialManager.adStatus == SASAdStatusReady) {
         

@@ -38,7 +38,7 @@ RCT_EXPORT_MODULE()
         kSmartAdInterstitialAdFailedToShow,
         kSmartAdInterstitialAdClicked,
         kSmartAdInterstitialAdDismissed,
-        //kSmartAdInterstitialAdVideoEvent 
+        kSmartAdInterstitialAdVideoEvent 
     ];
 }
 
@@ -48,7 +48,7 @@ RCT_EXPORT_METHOD(initializeInterstitial:(nonnull NSInteger *)kInterstitialSiteI
         
     #ifdef DEBUG
         SASAdPlacement *placement = [SASAdPlacement
-            adPlacementWithTestAd:SASAdPlacementTestInterstitialMRAID
+            adPlacementWithTestAd:SASAdPlacementTestInterstitialVideo
         ];
     #else
         SASAdPlacement *placement = [SASAdPlacement
@@ -116,10 +116,10 @@ RCT_EXPORT_METHOD(reset)
     [self sendEventWithName:kSmartAdInterstitialAdClicked body:nil];
 }
 
-/* - (void)interstitialManager:(SASInterstitialManager *)manager didSendVideoEvent: (SASVideoEvent *)videoEvent {
+- (void)interstitialManager:(SASInterstitialManager *)manager didSendVideoEvent: (SASVideoEvent *)videoEvent {
     NSLog(@"Interstitial did send video event: %li", (long)videoEvent);
     [self sendEventWithName:kSmartAdInterstitialAdVideoEvent body:nil];
-} */
+} 
 
 
 /* - (void)rewardedVideoManager:(SASRewardedVideoManager *)manager willPresentModalViewFromViewController: (UIViewController *)controller {

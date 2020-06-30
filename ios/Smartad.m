@@ -45,18 +45,18 @@ RCT_EXPORT_MODULE()
 RCT_EXPORT_METHOD(initializeInterstitial:(nonnull NSInteger *)kInterstitialSiteID kInterstitialPageID:(nonnull NSString *)kInterstitialPageID kInterstitialFormatID:(nonnull NSInteger *)kInterstitialFormatID kInterstitialKeywordTargeting:(nullable NSString *)kInterstitialKeywordTargeting)
 {
     [[SASConfiguration sharedInstance] configureWithSiteId:kInterstitialSiteID baseURL:kBaseURL];
-    
-    SASAdPlacement *placement = [SASAdPlacement
+        
+    #ifdef DEBUG
+        SASAdPlacement *placement = [SASAdPlacement
+            adPlacementWithTestAd:SASAdPlacementTestInterstitialMRAID
+        ];
+    #else
+        SASAdPlacement *placement = [SASAdPlacement
         adPlacementWithSiteId:kInterstitialSiteID
                        pageId:kInterstitialPageID
                      formatId:kInterstitialFormatID
              keywordTargeting:kInterstitialKeywordTargeting
-    ];
-    
-    #ifdef DEBUG
-        *placement = [SASAdPlacement
-        adPlacementWithTestAd: SASAdPlacementTestInterstitialMRAID
-    ];
+        ];
     #endif
     self.interstitialManager = [[SASInterstitialManager alloc] initWithPlacement:placement delegate:self];
 }

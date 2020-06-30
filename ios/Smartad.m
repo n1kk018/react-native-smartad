@@ -47,7 +47,9 @@ RCT_EXPORT_METHOD(initializeInterstitial:(nonnull NSInteger *)kInterstitialSiteI
         
     #ifdef DEBUG
         SASAdPlacement *placement = [SASAdPlacement
-            adPlacementWithTestAd:SASAdPlacementTestInterstitialVideo360
+            adPlacementWithTestAd:SASAdPlacementTestInterstitialMRAID
+            //adPlacementWithTestAd:SASAdPlacementTestInterstitialVideo
+            //adPlacementWithTestAd:SASAdPlacementTestInterstitialVideo360
         ];
     #else
         SASAdPlacement *placement = [SASAdPlacement
